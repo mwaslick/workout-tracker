@@ -9,7 +9,7 @@ useCreateIndex: true,
 useFindAndModify: false
  });
 
-router.post("/newworkout", ({body}, res) => {
+router.post("/api/newworkout", ({body}, res) => {
     db.Workout.create(body)
     .then(dbWorkout => {
         console.log(dbWorkout)
@@ -19,7 +19,7 @@ router.post("/newworkout", ({body}, res) => {
     })
 })
 
-router.post("/submit", ({body}, res) => {
+router.post("api/workout/:id", ({body}, res) => {
     db.Exercise.create(body)
     .then(({_id}) => db.Workout.findOneAndUpdate({}, { $push: {reps: _id}}, {new: true}))
     .then (dbWorkout => {
