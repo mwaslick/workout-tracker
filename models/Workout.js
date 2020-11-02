@@ -5,7 +5,8 @@ const Schema = mongoose.Schema;
 const WorkoutSchema = new Schema({
   name: {
     type: String,
-    unique: true
+    unique: true,
+    required: "Please enter a workout name"
   },
   reps: [
     {
