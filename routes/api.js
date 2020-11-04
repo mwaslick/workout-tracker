@@ -2,7 +2,7 @@ const router = require("express").Router();
 const db = require("../models/")
 const mongoose = require("mongoose")
 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workoutdb", { 
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { 
 useNewUrlParser: true,
 useUnifiedTopology: true,
 useCreateIndex: true,
@@ -19,27 +19,16 @@ router.post("/api/newworkout", ({body}, res) => {
     })
 })
 
-router.post("api/workout/:id", ({body}, res) => {
-    db.Exercise.create(body)
-    .then(({_id}) => db.Workout.findOneAndUpdate({}, { $push: {reps: _id}}, {new: true}))
-    .then (dbWorkout => {
-        res.json(dbWorkout);
-    })
-    .catch(err => {
-        res.json(err);
-    })
-})
-
-router.get("/populateworkout", (req, res) => {
-    db.Workout.find({})
-    .populate("reps")
+router.put("api/update/:id", ({body}, res) => {
+    db.Workout.findByIdAndUpdate(req.params.id, 
+        {$push: {exercises: body }},
+        {new: true, runValidators: true}
+        )
     .then(dbWorkout => {
         res.json(dbWorkout)
     })
-    .catch(err => {
-        res.json(err)
-    })
 })
+
 
 
 module.exports = router;
